@@ -30,12 +30,12 @@ def check_and_install_packages():
     for package_name, pip_name in required_packages.items():
         try:
             importlib.import_module(package_name)
-            print(f"✅ {package_name} installed")
+            print(f"[OK] {package_name} installed")
         except ImportError:
-            print(f"❌ {package_name} not installed")
+            print(f"[MISSING] {package_name} not installed")
             missing_packages.append(pip_name)
         except Exception as e:
-            print(f"⚠️ Exception while checking {package_name}: {e}")
+            print(f"[WARN] Exception while checking {package_name}: {e}")
             missing_packages.append(pip_name)
     
     if missing_packages:
@@ -45,14 +45,14 @@ def check_and_install_packages():
             try:
                 subprocess.check_call([sys.executable, '-m', 'pip', 'install', package], 
                                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                print(f"✅ {package} installed successfully")
+                print(f"[OK] {package} installed successfully")
             except subprocess.CalledProcessError as e:
-                print(f"❌ Failed to install {package}: {e}")
+                print(f"[ERROR] Failed to install {package}: {e}")
                 print("Please install the missing packages manually and rerun the program")
                 sys.exit(1)
         print("\nAll packages installed.")
     else:
-        print("✅ All required packages are installed")
+        print("[OK] All required packages are installed")
     
     print("-" * 50)
 
@@ -1715,7 +1715,7 @@ class CDSChecker:
                     <div class=\"summary-value invalid\">{invalid_percentage:.2f}%</div>
                 </div>
             </div>
-            {"<div class='summary-warning'>⚠️ No sequence records parsed</div>" if self.total_records == 0 else ""}
+            {"<div class='summary-warning'>Warning: No sequence records parsed</div>" if self.total_records == 0 else ""}
         </div>
         </section>
 
@@ -1878,7 +1878,7 @@ def main():
     
     # Check if input file exists
     if not os.path.exists(checker.input_file):
-        print(f"❌ Input file not found: {checker.input_file}")
+        print(f"[ERROR] Input file not found: {checker.input_file}")
         return
     
     try:
@@ -1892,7 +1892,7 @@ def main():
         checker.print_summary()
         
         end_time = time.time()
-        print(f"\n✅ Done. Elapsed time: {end_time - start_time:.2f} s")
+        print(f"\n[DONE] Elapsed time: {end_time - start_time:.2f} s")
         
     except KeyboardInterrupt:
         print("\nInterrupted by user")
