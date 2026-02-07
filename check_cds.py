@@ -456,6 +456,16 @@ class CDSChecker:
             except Exception:
                 return str(p)
 
+        invalid_preview_limit = 3
+
+        def render_invalid_row(r):
+            return (
+                f"            <tr><td>{html.escape(r['gene'])}</td><td>{fmt_int(r['length'])}</td>"
+                f"<td>{html.escape(r['start_codon'])}</td><td>{html.escape(r['stop_codon'])}</td>"
+                f"<td class='violations'>{html.escape(r['violations'])}</td>"
+                f"<td class='warnings'>{html.escape(r['warnings'])}</td></tr>\n"
+            )
+
         # ---------- Styles and base scripts (non f-string) ----------
         css_styles = """
         body {
@@ -548,6 +558,24 @@ class CDSChecker:
         }
         .violation-number { font-size: 24px; font-weight: bold; color: #e74c3c; }
         .histogram-container { text-align: center; margin: 20px 0; }
+        .invalid-records-preview-note {
+            margin: 8px 0 12px 0;
+            color: #34495e;
+            font-size: 14px;
+        }
+        .invalid-records-details {
+            margin-top: 8px;
+            border: 1px solid #d5d8dc;
+            border-radius: 6px;
+            background: #fafbfc;
+            padding: 8px 10px;
+        }
+        .invalid-records-details summary {
+            cursor: pointer;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 2px 0 8px 0;
+        }
         /* Upload & Optimize base styles */
         .upload-card {
             background: #f7f7f7;
@@ -1312,11 +1340,23 @@ class CDSChecker:
                 <th class="warnings-column">Warnings</th>
             </tr>
 """
-            invalid_rows = ''.join([
-                f"            <tr><td>{html.escape(r['gene'])}</td><td>{fmt_int(r['length'])}</td><td>{html.escape(r['start_codon'])}</td><td>{html.escape(r['stop_codon'])}</td><td class='violations'>{html.escape(r['violations'])}</td><td class='warnings'>{html.escape(r['warnings'])}</td></tr>\n"
-                for r in self.invalid_records
-            ])
-            invalid_section_html = invalid_table_header + invalid_rows + "        </table>\n"
+            preview_rows = ''.join(render_invalid_row(r) for r in self.invalid_records[:invalid_preview_limit])
+
+            if len(self.invalid_records) > invalid_preview_limit:
+                hidden_rows = ''.join(render_invalid_row(r) for r in self.invalid_records[invalid_preview_limit:])
+                hidden_count = len(self.invalid_records) - invalid_preview_limit
+                invalid_section_html = (
+                    f"<div class='invalid-records-preview-note'>Showing first {invalid_preview_limit} records. Total invalid records: {fmt_int(len(self.invalid_records))}.</div>"
+                    + invalid_table_header
+                    + preview_rows
+                    + "        </table>\n"
+                    + f"<details class='invalid-records-details'><summary>Show remaining {fmt_int(hidden_count)} invalid records</summary>"
+                    + invalid_table_header
+                    + hidden_rows
+                    + "        </table></details>\n"
+                )
+            else:
+                invalid_section_html = invalid_table_header + preview_rows + "        </table>\n"
         else:
             invalid_section_html = "<p style=\"color: #27ae60; font-weight: bold;\">🎉 All sequences are compliant!</p>"
 
@@ -1402,7 +1442,7 @@ class CDSChecker:
         # ---------- Main HTML (f-string; only inserts pre-built variables) ----------
         html_content = f"""
 <!DOCTYPE html>
-<html lang=\"zh-CN\">
+<html lang=\"en\">
 <head>
     <meta charset=\"UTF-8\">
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
