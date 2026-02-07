@@ -806,7 +806,7 @@ class CDSChecker:
         }
         #codonUsageTable thead th {
             position: sticky;
-            top: var(--sticky-offset, 64px);
+            top: 0;
             z-index: 2;
             background-color: #3498db;
             color: white;
@@ -939,11 +939,6 @@ class CDSChecker:
             var reportNav = document.getElementById('reportNav');
             var backToTopBtn = document.getElementById('backToTopBtn');
 
-            function updateStickyOffset() {
-                var navHeight = reportNav ? reportNav.offsetHeight : 0;
-                document.documentElement.style.setProperty('--sticky-offset', (navHeight + 14) + 'px');
-            }
-
             function handleBackToTopVisibility() {
                 if (!backToTopBtn) return;
                 if (window.scrollY > 260) {
@@ -954,15 +949,28 @@ class CDSChecker:
             }
 
             function initPageNavigation() {
-                updateStickyOffset();
                 handleBackToTopVisibility();
-                window.addEventListener('resize', updateStickyOffset);
                 window.addEventListener('scroll', handleBackToTopVisibility, { passive: true });
                 if (backToTopBtn) {
                     backToTopBtn.addEventListener('click', function() {
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                     });
                 }
+
+                var detailsList = document.querySelectorAll('.invalid-records-details');
+                detailsList.forEach(function(detailsEl) {
+                    var summaryEl = detailsEl.querySelector('summary');
+                    if (!summaryEl) return;
+                    var showText = summaryEl.getAttribute('data-show') || summaryEl.textContent;
+                    var hideText = summaryEl.getAttribute('data-hide') || showText;
+
+                    function syncSummaryLabel() {
+                        summaryEl.textContent = detailsEl.open ? hideText : showText;
+                    }
+
+                    syncSummaryLabel();
+                    detailsEl.addEventListener('toggle', syncSummaryLabel);
+                });
             }
 
             // Initialize codon usage table
@@ -1564,7 +1572,7 @@ class CDSChecker:
                     + invalid_table_header
                     + preview_rows
                     + "        </table>\n"
-                    + f"<details class='invalid-records-details'><summary>Show remaining {fmt_int(hidden_count)} invalid records</summary>"
+                    + f"<details class='invalid-records-details'><summary data-show='Show remaining {fmt_int(hidden_count)} invalid records' data-hide='Hide remaining {fmt_int(hidden_count)} invalid records'>Show remaining {fmt_int(hidden_count)} invalid records</summary>"
                     + invalid_table_header
                     + hidden_rows
                     + "        </table></details>\n"
