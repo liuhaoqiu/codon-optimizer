@@ -468,44 +468,95 @@ class CDSChecker:
 
         # ---------- Styles and base scripts (non f-string) ----------
         css_styles = """
+        :root {
+            --bg-page: #f3f6fb;
+            --bg-panel: #ffffff;
+            --bg-subtle: #f6f8fc;
+            --bg-accent-soft: #eef5ff;
+            --text-primary: #1f2d3d;
+            --text-secondary: #5f6c7a;
+            --border-color: #d8e0ea;
+            --primary: #2a6fdb;
+            --primary-dark: #1f5abc;
+            --success: #1f9d67;
+            --danger: #cc3d3d;
+            --warning: #c27c0e;
+            --shadow-soft: 0 10px 24px rgba(31, 45, 61, 0.08);
+            --radius-md: 10px;
+            --radius-sm: 8px;
+        }
         body {
-            font-family: Arial, sans-serif;
+            font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
             margin: 20px;
-            background-color: #f5f5f5;
+            background-color: var(--bg-page);
+            color: var(--text-primary);
         }
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background-color: var(--bg-panel);
+            padding: 24px;
+            border-radius: 14px;
+            box-shadow: var(--shadow-soft);
         }
         h1 {
-            color: #2c3e50;
+            color: var(--text-primary);
             text-align: center;
-            border-bottom: 3px solid #3498db;
-            padding-bottom: 10px;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 12px;
+            letter-spacing: 0.2px;
         }
         h2 {
-            color: #34495e;
-            border-left: 4px solid #3498db;
+            color: var(--text-primary);
+            border-left: 4px solid var(--primary);
             padding-left: 10px;
-            margin-top: 30px;
+            margin-top: 32px;
         }
         .summary {
-            background-color: #ecf0f1;
-            padding: 15px;
-            border-radius: 5px;
+            background-color: var(--bg-subtle);
+            border: 1px solid var(--border-color);
+            padding: 16px;
+            border-radius: var(--radius-md);
             margin: 20px 0;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 12px;
+        }
+        .summary-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            box-shadow: 0 2px 8px rgba(31, 45, 61, 0.05);
+        }
+        .summary-label {
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+        .summary-value {
+            color: var(--text-primary);
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        .summary-value.valid { color: var(--success); }
+        .summary-value.invalid { color: var(--danger); }
+        .summary-warning {
+            color: var(--danger);
+            font-weight: 700;
+            margin-top: 10px;
         }
         .summary-item {
             display: inline-block;
-            margin: 10px 20px 10px 0;
-            font-weight: bold;
+            margin: 8px 16px 8px 0;
+            color: var(--text-primary);
+            font-weight: 600;
         }
-        .valid { color: #27ae60; }
-        .invalid { color: #e74c3c; }
+        .valid { color: var(--success); }
+        .invalid { color: var(--danger); }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -514,8 +565,8 @@ class CDSChecker:
             table-layout: fixed;
         }
         th, td {
-            border: 1px solid #bdc3c7;
-            padding: 8px;
+            border: 1px solid var(--border-color);
+            padding: 10px 8px;
             text-align: left;
             word-wrap: break-word;
             word-break: break-all;
@@ -530,75 +581,120 @@ class CDSChecker:
         .non-atcg-column { width: 57%; max-width: 57%; }
         .codon-aa-column { width: 25%; max-width: 25%; }
         .codon-freq-column { width: 18%; max-width: 18%; }
-        th { background-color: #3498db; color: white; font-weight: bold; }
-        tr:nth-child(even) { background-color: #f8f9fa; }
-        tr:hover { background-color: #e8f4f8; }
-        .violations { color: #e74c3c; font-weight: bold; }
-        .warnings { color: #f39c12; font-style: italic; }
+        th {
+            background-color: var(--primary);
+            color: #ffffff;
+            font-weight: bold;
+        }
+        tr:nth-child(even) { background-color: #f9fbff; }
+        tr:hover { background-color: var(--bg-accent-soft); }
+        .violations { color: var(--danger); font-weight: bold; }
+        .warnings { color: var(--warning); font-style: italic; }
         .meta {
             background-color: #f8f9fa;
             padding: 15px;
-            border-radius: 5px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
             margin-top: 30px;
             font-size: 12px;
-            color: #7f8c8d;
+            color: var(--text-secondary);
         }
         .violation-stats {
-            display: flex;
-            justify-content: space-around;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
             margin: 20px 0;
         }
         .violation-item {
-            text-align: center;
-            background-color: #fff;
-            padding: 15px;
-            border-radius: 5px;
-            border: 2px solid #e74c3c;
-            min-width: 150px;
+            text-align: left;
+            background-color: var(--bg-panel);
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px rgba(31, 45, 61, 0.05);
         }
-        .violation-number { font-size: 24px; font-weight: bold; color: #e74c3c; }
+        .violation-number { font-size: 24px; font-weight: bold; color: var(--danger); }
+        .violation-label {
+            margin-top: 6px;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+        .violation-rate {
+            margin-top: 2px;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 13px;
+        }
         .histogram-container { text-align: center; margin: 20px 0; }
         .invalid-records-preview-note {
             margin: 8px 0 12px 0;
-            color: #34495e;
+            color: var(--text-secondary);
             font-size: 14px;
         }
         .invalid-records-details {
             margin-top: 8px;
-            border: 1px solid #d5d8dc;
-            border-radius: 6px;
-            background: #fafbfc;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            background: var(--bg-subtle);
             padding: 8px 10px;
         }
         .invalid-records-details summary {
             cursor: pointer;
             font-weight: bold;
-            color: #2c3e50;
+            color: var(--primary-dark);
             margin: 2px 0 8px 0;
+            list-style: none;
+        }
+        .invalid-records-details summary::-webkit-details-marker {
+            display: none;
+        }
+        .invalid-records-details summary::before {
+            content: "▸ ";
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+        .invalid-records-details[open] summary::before {
+            content: "▾ ";
         }
         /* Upload & Optimize base styles */
         .upload-card {
-            background: #f7f7f7;
-            border: 2px dashed #bdc3c7;
-            padding: 16px;
-            border-radius: 8px;
+            background: linear-gradient(180deg, #f9fbff 0%, #f4f8ff 100%);
+            border: 1px solid var(--border-color);
+            padding: 18px;
+            border-radius: var(--radius-md);
             margin: 20px 0;
+            box-shadow: 0 6px 16px rgba(31, 45, 61, 0.06);
         }
-        .upload-card p { margin: 0 0 10px 0; color: #34495e; }
+        .upload-card p { margin: 0 0 12px 0; color: var(--text-secondary); line-height: 1.45; }
         .controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
         .btn {
-            background: #3498db;
+            background: var(--primary);
             color: #fff;
             border: none;
-            padding: 8px 14px;
+            padding: 9px 14px;
             border-radius: 4px;
             cursor: pointer;
             transition: background-color .2s ease;
+            font-weight: 600;
         }
         .btn:disabled { cursor: not-allowed; opacity: 0.6; }
-        .btn:hover:not(:disabled) { background: #2d89c8; }
-        .btn.btn-secondary { background: #7f8c8d; }
-        .btn.btn-secondary:hover:not(:disabled) { background: #6d7a7b; }
+        .btn:hover:not(:disabled) { background: var(--primary-dark); }
+        .btn.btn-secondary {
+            background: #ffffff;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+        .btn.btn-secondary:hover:not(:disabled) {
+            background: #f2f5fa;
+            color: var(--text-primary);
+        }
+        #btnOptimize {
+            background: linear-gradient(180deg, #2f78ec 0%, #2668d0 100%);
+            box-shadow: 0 4px 10px rgba(38, 104, 208, 0.3);
+        }
+        #btnOptimize:hover:not(:disabled) {
+            background: linear-gradient(180deg, #286adb 0%, #1f5abc 100%);
+        }
         .results {
             background: #ecf0f1;
             border: 1px dashed #bdc3c7;
@@ -710,7 +806,7 @@ class CDSChecker:
         }
         #codonUsageTable thead th {
             position: sticky;
-            top: 0;
+            top: var(--sticky-offset, 64px);
             z-index: 2;
             background-color: #3498db;
             color: white;
@@ -723,8 +819,94 @@ class CDSChecker:
         #codonUsageTable tbody tr.group-start td {
             border-top: 2px solid #2c3e50;
         }
+        .report-nav {
+            position: sticky;
+            top: 8px;
+            z-index: 30;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(6px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 8px;
+            margin: 12px 0 16px 0;
+            box-shadow: 0 6px 16px rgba(31, 45, 61, 0.08);
+        }
+        .nav-link {
+            display: inline-block;
+            text-decoration: none;
+            color: var(--primary-dark);
+            background: #f4f8ff;
+            border: 1px solid #dce7fb;
+            border-radius: 999px;
+            padding: 6px 10px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .nav-link:hover {
+            background: #e9f1ff;
+            border-color: #c9dcff;
+        }
+        .nav-link:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+        .report-section {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-top: 16px;
+            scroll-margin-top: 88px;
+            box-shadow: 0 4px 14px rgba(31, 45, 61, 0.05);
+        }
+        .report-section h2 {
+            margin-top: 0;
+        }
+        .section-note {
+            color: var(--text-secondary);
+            margin: 4px 0 10px 0;
+            font-size: 13px;
+        }
+        .back-to-top {
+            position: fixed;
+            right: 16px;
+            bottom: 16px;
+            z-index: 40;
+            border: none;
+            border-radius: 999px;
+            background: var(--primary-dark);
+            color: #fff;
+            padding: 10px 14px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(31, 90, 188, 0.35);
+            opacity: 0;
+            transform: translateY(8px);
+            pointer-events: none;
+            transition: opacity .2s ease, transform .2s ease;
+        }
+        .back-to-top.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        .back-to-top:focus-visible {
+            outline: 2px solid #ffffff;
+            outline-offset: 2px;
+        }
         @media (max-width: 768px) {
             .container { padding: 10px; margin: 10px; }
+            .report-nav { top: 4px; padding: 6px; }
+            .nav-link { font-size: 12px; padding: 6px 8px; }
+            .report-section { padding: 12px; }
+            .back-to-top { right: 12px; bottom: 12px; }
+            .summary-grid { grid-template-columns: 1fr 1fr; }
+            .summary-value { font-size: 20px; }
+            .violation-stats { grid-template-columns: 1fr; }
             table { font-size: 12px; }
             th, td { padding: 6px 4px; }
             .gene-column { width: 40%; max-width: 40%; }
@@ -754,6 +936,34 @@ class CDSChecker:
             var downloadCSV = document.getElementById('downloadCodonUsageCSV');
             var tableBody = document.getElementById('codonUsageTableBody');
             var searchTimeout = null;
+            var reportNav = document.getElementById('reportNav');
+            var backToTopBtn = document.getElementById('backToTopBtn');
+
+            function updateStickyOffset() {
+                var navHeight = reportNav ? reportNav.offsetHeight : 0;
+                document.documentElement.style.setProperty('--sticky-offset', (navHeight + 14) + 'px');
+            }
+
+            function handleBackToTopVisibility() {
+                if (!backToTopBtn) return;
+                if (window.scrollY > 260) {
+                    backToTopBtn.classList.add('is-visible');
+                } else {
+                    backToTopBtn.classList.remove('is-visible');
+                }
+            }
+
+            function initPageNavigation() {
+                updateStickyOffset();
+                handleBackToTopVisibility();
+                window.addEventListener('resize', updateStickyOffset);
+                window.addEventListener('scroll', handleBackToTopVisibility, { passive: true });
+                if (backToTopBtn) {
+                    backToTopBtn.addEventListener('click', function() {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    });
+                }
+            }
 
             // Initialize codon usage table
             function initCodonUsageTable() {
@@ -1013,9 +1223,13 @@ class CDSChecker:
 
             // Initialize codon usage table when DOM is ready
             if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', initCodonUsageTable);
+                document.addEventListener('DOMContentLoaded', function() {
+                    initCodonUsageTable();
+                    initPageNavigation();
+                });
             } else {
                 initCodonUsageTable();
+                initPageNavigation();
             }
 
             // Original Upload & Optimize functionality
@@ -1453,56 +1667,96 @@ class CDSChecker:
     <style>{css_styles}</style>
 </head>
 <body>
-    <div class=\"container\"> 
+    <div class=\"container\" id=\"pageTop\"> 
         <h1>CDS Codon Usage Report and Codon Optimization</h1>
 
+        <nav class=\"report-nav\" id=\"reportNav\" aria-label=\"Report section navigation\">
+            <a class=\"nav-link\" href=\"#summary\">Summary</a>
+            <a class=\"nav-link\" href=\"#violations\">Violations</a>
+            <a class=\"nav-link\" href=\"#invalid-records\">Invalid Records</a>
+            <a class=\"nav-link\" href=\"#non-atcg\">Non-ATCG</a>
+            <a class=\"nav-link\" href=\"#length-distribution\">Length Plot</a>
+            <a class=\"nav-link\" href=\"#codon-usage\">Codon Usage</a>
+            <a class=\"nav-link\" href=\"#upload-optimize\">Upload & Optimize</a>
+            <a class=\"nav-link\" href=\"#methods-meta\">Methods & Meta</a>
+        </nav>
+
         <!-- Summary -->
+        <section id=\"summary\" class=\"report-section\">
         <h2>Summary</h2>
         <div class=\"summary\">
-            <div class=\"summary-item\">Total records: <strong>{fmt_int(self.total_records)}</strong></div>
-            <div class=\"summary-item valid\">Valid records: <strong>{fmt_int(self.valid_records)}</strong></div>
-            <div class=\"summary-item\">Participating genes (ATCG-only): <strong>{fmt_int(self.participating_genes)}</strong></div>
-            <div class=\"summary-item invalid\">Invalid records: <strong>{fmt_int(invalid_count)}</strong></div>
-            <div class=\"summary-item invalid\">Invalid rate: <strong>{invalid_percentage:.2f}%</strong></div>
-            {"<div style='color: #e74c3c; font-weight: bold; margin-top: 10px;'>⚠️ No sequence records parsed</div>" if self.total_records == 0 else ""}
+            <div class=\"summary-grid\">
+                <div class=\"summary-card\">
+                    <div class=\"summary-label\">Total records</div>
+                    <div class=\"summary-value\">{fmt_int(self.total_records)}</div>
+                </div>
+                <div class=\"summary-card\">
+                    <div class=\"summary-label\">Valid records</div>
+                    <div class=\"summary-value valid\">{fmt_int(self.valid_records)}</div>
+                </div>
+                <div class=\"summary-card\">
+                    <div class=\"summary-label\">Participating genes (ATCG-only)</div>
+                    <div class=\"summary-value\">{fmt_int(self.participating_genes)}</div>
+                </div>
+                <div class=\"summary-card\">
+                    <div class=\"summary-label\">Invalid records</div>
+                    <div class=\"summary-value invalid\">{fmt_int(invalid_count)}</div>
+                </div>
+                <div class=\"summary-card\">
+                    <div class=\"summary-label\">Invalid rate</div>
+                    <div class=\"summary-value invalid\">{invalid_percentage:.2f}%</div>
+                </div>
+            </div>
+            {"<div class='summary-warning'>⚠️ No sequence records parsed</div>" if self.total_records == 0 else ""}
         </div>
+        </section>
 
         <!-- Violations Breakdown -->
+        <section id=\"violations\" class=\"report-section\">
         <h2>Violations Breakdown</h2>
         <div class=\"violation-stats\">
             <div class=\"violation-item\">
                 <div class=\"violation-number\">{fmt_int(self.violations['length'])}</div>
-                <div>Length violations</div>
-                <div>({"—" if self.total_records == 0 else fmt_pct(self.violations['length']/self.total_records*100)})</div>
+                <div class=\"violation-label\">Length violations</div>
+                <div class=\"violation-rate\">Rate: {"—" if self.total_records == 0 else fmt_pct(self.violations['length']/self.total_records*100)}</div>
             </div>
             <div class=\"violation-item\">
                 <div class=\"violation-number\">{fmt_int(self.violations['start_codon'])}</div>
-                <div>Start codon violations</div>
-                <div>({"—" if self.total_records == 0 else fmt_pct(self.violations['start_codon']/self.total_records*100)})</div>
+                <div class=\"violation-label\">Start codon violations</div>
+                <div class=\"violation-rate\">Rate: {"—" if self.total_records == 0 else fmt_pct(self.violations['start_codon']/self.total_records*100)}</div>
             </div>
             <div class=\"violation-item\">
                 <div class=\"violation-number\">{fmt_int(self.violations['stop_codon'])}</div>
-                <div>Stop codon violations</div>
-                <div>({"—" if self.total_records == 0 else fmt_pct(self.violations['stop_codon']/self.total_records*100)})</div>
+                <div class=\"violation-label\">Stop codon violations</div>
+                <div class=\"violation-rate\">Rate: {"—" if self.total_records == 0 else fmt_pct(self.violations['stop_codon']/self.total_records*100)}</div>
             </div>
         </div>
+        </section>
 
         <!-- Invalid Records -->
+        <section id=\"invalid-records\" class=\"report-section\">
         <h2>Invalid Records</h2>
         {invalid_section_html}
+        </section>
 
         <!-- Sequences with non-ATCG characters -->
+        <section id=\"non-atcg\" class=\"report-section\">
         <h2>Sequences with non-ATCG characters</h2>
         {nonatcg_section_html}
+        </section>
 
         <!-- Valid CDS Length Distribution -->
-        {f"<h2>Valid CDS Length Distribution</h2><div class='histogram-container'>{histogram_html}</div>" if histogram_html else ""}
+        {f"<section id='length-distribution' class='report-section'><h2>Valid CDS Length Distribution</h2><p class='section-note'>Distribution of CDS lengths among records that passed compliance checks.</p><div class='histogram-container'>{histogram_html}</div></section>" if histogram_html else ""}
 
         <!-- Codon Usage (including STOP) -->
+        <section id=\"codon-usage\" class=\"report-section\">
         <h2>Codon Usage (including STOP)</h2>
+        <p class=\"section-note\">Use filters to focus on specific amino acids or codons, then export the current view if needed.</p>
         {codon_usage_section_html}
+        </section>
 
         <!-- Upload & Optimize -->
+        <section id=\"upload-optimize\" class=\"report-section\">
         <h2>Upload & Optimize</h2>
         <div class="upload-card">
             <p>Only accepts a single-record CDS FASTA with .fa extension. The first line must start with '>' followed by the CDS name. Please upload a FASTA file ending with .fa.</p>
@@ -1515,8 +1769,10 @@ class CDSChecker:
             <div id="uploadResults" class="results"></div>
             <div id="optimizeResults" class="results"></div>
         </div>
+        </section>
 
         <!-- Methods & Meta -->
+        <section id=\"methods-meta\" class=\"report-section\">
         <h2>Methods & Meta</h2>
         <div class=\"meta\">
             <p><strong>Timestamp:</strong> {self.timestamp}</p>
@@ -1542,8 +1798,11 @@ class CDSChecker:
             </ul>
             <p><strong>Note:</strong> Sequences containing non-ATCG characters are listed separately, but compliance determination still follows the above three rules.</p>
         </div>
+        </section>
 
     </div>
+
+    <button id="backToTopBtn" class="back-to-top" type="button" aria-label="Back to top">Top</button>
 
     <!-- Inject read-only data objects -->
     <script>
