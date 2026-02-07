@@ -1786,7 +1786,6 @@ class CDSChecker:
             <p><strong>Timestamp:</strong> {self.timestamp}</p>
             <p><strong>Author:</strong> Haoqiu Liu</p>
             <p><strong>Script version:</strong> {self.version}</p>
-            <p><strong>Input file path:</strong> {os.path.abspath(self.input_file)}</p>
             <p><strong>Validation rules:</strong></p>
             <ul>
                 <li>1. Sequence length must be a multiple of 3</li>
