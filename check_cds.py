@@ -491,6 +491,9 @@ class CDSChecker:
             background-color: var(--bg-page);
             color: var(--text-primary);
         }
+        html {
+            scroll-padding-top: 108px;
+        }
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -821,7 +824,7 @@ class CDSChecker:
         }
         .report-nav {
             position: sticky;
-            top: 8px;
+            top: 0;
             z-index: 30;
             display: flex;
             gap: 8px;
@@ -831,7 +834,7 @@ class CDSChecker:
             border: 1px solid var(--border-color);
             border-radius: var(--radius-sm);
             padding: 8px;
-            margin: 12px 0 16px 0;
+            margin: 0 0 16px 0;
             box-shadow: 0 6px 16px rgba(31, 45, 61, 0.08);
         }
         .nav-link {
@@ -859,7 +862,7 @@ class CDSChecker:
             border-radius: var(--radius-md);
             padding: 16px;
             margin-top: 16px;
-            scroll-margin-top: 88px;
+            scroll-margin-top: 108px;
             box-shadow: 0 4px 14px rgba(31, 45, 61, 0.05);
         }
         .report-section h2 {
@@ -900,7 +903,7 @@ class CDSChecker:
         }
         @media (max-width: 768px) {
             .container { padding: 10px; margin: 10px; }
-            .report-nav { top: 4px; padding: 6px; }
+            .report-nav { top: 0; padding: 6px; }
             .nav-link { font-size: 12px; padding: 6px 8px; }
             .report-section { padding: 12px; }
             .back-to-top { right: 12px; bottom: 12px; }
